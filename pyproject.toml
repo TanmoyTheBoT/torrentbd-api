@@ -1,14 +1,28 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "torrentbd-api"
-version = "0.1.0"
-description = "Add your description here"
+name = "tbd-api"
+dynamic = ["version"]
+description = "Unofficial API for TorrentBD"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "dotenv>=0.9.9",
+    "python-dotenv>=0.9.9",
     "fastapi>=0.115.12",
     "pyotp>=2.9.0",
     "requests>=2.32.3",
     "selenium>=4.32.0",
     "uvicorn>=0.34.2",
 ]
+
+[project.scripts]
+tbd-api = "torrentbd_api.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["torrentbd_api"] 
+
+[tool.setuptools.dynamic]
+version = { attr = "torrentbd_api.version.__version__" }
