@@ -1,0 +1,14 @@
+[project]
+name = "torrentbd-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "fastapi>=0.115.12",
+    "pyotp>=2.9.0",
+    "requests>=2.32.3",
+    "selenium>=4.32.0",
+    "uvicorn>=0.34.2",
+]
