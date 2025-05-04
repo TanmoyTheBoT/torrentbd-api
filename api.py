@@ -3,7 +3,7 @@ import pyotp
 import json
 from dotenv import load_dotenv
 import os
-import http.cookiejar as cookielib
+import http.cookiejar as cookiejar
 
 load_dotenv()
 
@@ -36,23 +36,37 @@ session = requests.Session()
 cookies_file = "cookies.txt"
 logged_in = False
 
-if os.path.exists(cookies_file):
+def is_cookie_file_valid(filepath):
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+            return len(content) > 0
+    except Exception:
+        return False
+
+if os.path.exists(cookies_file) and is_cookie_file_valid(cookies_file):
     print("🍪 Loading cookies from file...")
-    cookiejar = cookielib.MozillaCookieJar(cookies_file)
-    cookiejar.load(ignore_discard=True, ignore_expires=True)
-    session.cookies = cookiejar  # 🔧 Assign directly to session
-
-    # Check if still logged in
-    verify_url = "https://www.torrentbd.net/"
-    verify_response = session.get(verify_url, headers=headers)
-    with open("responsetest.html", "w", encoding="utf-8") as f:
-        f.write(verify_response.text)
-
-    if "home - torrentbd" in verify_response.text.lower():
-        print("✅ Cookies are valid. Already logged in.")
-        logged_in = True
+    cookiejar = cookiejar.MozillaCookieJar(cookies_file)
+    try:
+        cookiejar.load(ignore_discard=True, ignore_expires=True)
+        session.cookies = cookiejar
+    except Exception as e:
+        print(f"⚠️ Failed to load cookies properly: {e}")
     else:
-        print("⚠️ Cookies are invalid or expired. Need to login.")
+        # Check login status
+        verify_url = "https://www.torrentbd.net/"
+        try:
+            verify_response = session.get(verify_url, headers=headers)
+
+            if "home - torrentbd" in verify_response.text.lower():
+                print("✅ Cookies are valid. Already logged in.")
+                logged_in = True
+            else:
+                print("⚠️ Cookies loaded but user seems not logged in.")
+        except Exception as e:
+            print(f"❌ Failed to verify login with cookies: {e}")
+else:
+    print("📂 Cookie file missing or blank.")
 
 # === Step 3: Login if not already ===
 if not logged_in:
@@ -69,34 +83,23 @@ if not logged_in:
         "auth_login": "",
         "recaptcha_token": RECAPTCHA_TOKEN,
         "otp": otp,
-        "login_phase": "1",
+        "login_phase": "2",
         "_remember": "yes",
         "extra": ""
     }
 
-    response = session.post(login_url, data=payload)
+    try:
+        response = session.post(login_url, data=payload, headers=headers)
+        if "login successful" in response.text.lower():
+            print("✅ Login successful!")
+            # Save browser-style cookies
+            cookiejar = cookiejar.MozillaCookieJar(cookies_file)
+            for cookie in session.cookies:
+                cookiejar.set_cookie(cookie)
+            cookiejar.save(ignore_discard=True, ignore_expires=True)
+            print("🍪 cookies saved to cookies.txt")
 
-    # Debug info
-    print("\n📨 Raw Response Headers:")
-    for header, value in response.headers.items():
-        print(f"{header}: {value}")
-
-    print("\n🧾 Raw Response Body:")
-    print(response.text[:1000])  # Limit output
-
-    if "login successful" in response.text.lower():
-        print("✅ Login successful!")
-
-        # Save cookies in Netscape format
-        cookiejar = cookielib.MozillaCookieJar(cookies_file)
-        for cookie in session.cookies:
-            cookiejar.set_cookie(cookie)
-        cookiejar.save(ignore_discard=True, ignore_expires=True)
-
-        print("🍪 Cookies saved to cookies.txt")
-
-        print("\n🔍 Saved Cookies:")
-        for cookie in session.cookies:
-            print(f"{cookie.domain}\t{cookie.path}\t{cookie.name}\t{cookie.value}")
-    else:
-        print("❌ Login failed.")
+        else:
+            print("❌ Login failed. Check credentials or CAPTCHA.")
+    except Exception as e:
+        print(f"❌ Login request failed: {e}")
