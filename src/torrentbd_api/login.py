@@ -4,6 +4,7 @@ import json
 from dotenv import load_dotenv
 import os
 import http.cookiejar as cj
+from v3cap.captcha import get_recaptcha_token as fetch_recaptcha_token
 
 load_dotenv()
 
@@ -17,15 +18,11 @@ headers = {
 
 def get_recaptcha_token():
     print("🔄 Requesting reCAPTCHA token...")
-    url = "http://127.0.0.1:8000/solve_recaptcha/"
-    params = {
-        "site_key": "6Lci27UZAAAAAPMvFNNodcgJhYyB8D3MrnaowTqe",
-        "page_url": "https://www.torrentbd.net/"
-    }
     try:
-        response = session.post(url, params=params, headers=headers)
-        response.raise_for_status()
-        token = response.json().get("gRecaptchaResponse")
+        token = fetch_recaptcha_token(
+            site_key="6Lci27UZAAAAAPMvFNNodcgJhYyB8D3MrnaowTqe",
+            page_url="https://www.torrentbd.net"
+        )
         if not token:
             raise ValueError("No token returned")
         print("✅ reCAPTCHA token received")
@@ -88,7 +85,6 @@ def login():
         response = session.post("https://www.torrentbd.net/ajtakelogin.php", data=payload, headers=headers)
         if "login successful" in response.text.lower():
             print("✅ Login successful!")
-
             cookiejar_obj = cj.MozillaCookieJar(cookies_file)
             for c in session.cookies:
                 cookiejar_obj.set_cookie(c)
@@ -100,9 +96,6 @@ def login():
         print(f"❌ Login request failed: {e}")
 
 
-
 if __name__ == "__main__":
     if not check_login_status():
         login()
-
-

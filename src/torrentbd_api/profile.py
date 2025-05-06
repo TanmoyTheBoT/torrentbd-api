@@ -10,8 +10,6 @@ def get_user_profile():
     
     try:
         response = session.get(url, headers=headers)
-        with open("profile.html", "w", encoding="utf-8") as f:
-            f.write(response.text)
         response.raise_for_status()
         return {"result": parse_profile_from_html(response.text)}
     except Exception as e:
