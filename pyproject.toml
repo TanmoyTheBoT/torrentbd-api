@@ -8,6 +8,15 @@ dynamic = ["version"]
 description = "Unofficial API for TorrentBD"
 readme = "README.md"
 requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "TanmoyTheBoT", email = "tanmoysarkershuvo@gmail.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "python-dotenv>=0.9.9",
     "fastapi>=0.115.12",
