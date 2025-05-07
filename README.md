@@ -19,6 +19,15 @@ This project is not affiliated with or endorsed by TorrentBD. This is an unoffic
 pip install tbd-api
 ```
 
+## 🖥️ System Requirements
+
+For login functionality:
+- Chrome or Chromium browser
+- ChromeDriver (compatible with your Chrome/Chromium version)
+- v3cap package (automatically installed as dependency for reCAPTCHA handling)
+
+Note: The login process uses v3cap for automated reCAPTCHA solving.
+
 ## 🔧 Quick Start
 
 ```bash
