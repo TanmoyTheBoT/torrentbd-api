@@ -2,49 +2,70 @@
 
 Unofficial API for TorrentBD with search and profile access.
 
-[![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+<p align="center">
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.12%2B-blue.svg" alt="Python Version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"></a>
+  <a href="https://badge.fury.io/py/tbd-api"><img src="https://badge.fury.io/py/tbd-api.svg" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/tbd-api/"><img src="https://img.shields.io/pypi/d/tbd-api.svg" alt="PyPI downloads"></a>
+</p>
 
-## 📋 Overview
+## Overview
 
-TorrentBD API is a Python package that wraps the TorrentBD website into a RESTful API. It handles authentication, session management, and parsing of web content.
+TorrentBD API is a Python package that provides a RESTful API wrapper for the TorrentBD website. It handles authentication, session management, and parsing of web content.
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 This project is not affiliated with or endorsed by TorrentBD. This is an unofficial API created for educational purposes only. Use at your own risk.
 
-## 🚀 Installation
+## Features
+
+- Search torrents with pagination
+- Access user profile information
+- Automated login with reCAPTCHA solving
+- Configurable via command line, environment variables, or config file
+- Web UI for easy access
+
+## Installation
 
 ```bash
 pip install tbd-api
 ```
 
-## 🖥️ System Requirements
+## Requirements
 
-For login functionality:
-- Chrome or Chromium browser
+- Python 3.12 or later
+- Chrome or Chromium browser (for login functionality)
 - ChromeDriver (compatible with your Chrome/Chromium version)
-- v3cap package (automatically installed as dependency for reCAPTCHA handling)
 
-Note: The login process uses v3cap for automated reCAPTCHA solving.
+## Usage
 
-## 🔧 Quick Start
+### Command Line
 
 ```bash
-# Basic usage (uses saved config if available)
+# Basic usage
 tbd-api
 
-# With credentials (automatically saved to config)
+# With credentials
 tbd-api --username "user" --password "pass" --totp-secret "secret"
 
 # Custom host and port
 tbd-api --host "127.0.0.1" --port 8000
 ```
 
-## 📋 Command-Line Arguments
+### API Endpoints
+
+| Endpoint | Method | Description | Parameters |
+|----------|--------|-------------|------------|
+| `/search` | GET | Search torrents | `query` (required): Search term<br>`page` (optional): Page number (default: 1) |
+| `/profile` | GET | Get user profile | None |
+
+
+## Configuration
+
+### Command-Line Arguments
 
 ```
-usage: tbd-api [-h] [--username USERNAME] [--password PASSWORD] [--totp-secret TOTP_SECRET] 
+usage: tbd-api [-h] [--username USERNAME] [--password PASSWORD] [--totp-secret TOTP_SECRET]
                [--port PORT] [--host HOST] [--cookies COOKIES]
 
 options:
@@ -58,11 +79,15 @@ options:
   --cookies COOKIES     Path to cookies file
 ```
 
-## ⚙️ Configuration
+### Configuration Files
 
 All data is automatically saved in `~/.config/tbd-api/`:
 - Credentials and settings: `config.json`
-- Login cookies: `cookies.txt`
+- Login cookies: `cookies.txt` (Netscape format)
+
+### Cookie Management
+
+You can use the [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) Chrome extension to export cookies from TorrentBD in Netscape format and save them to `~/.config/tbd-api/cookies.txt`. This is useful when you want to bypass the automated login process.
 
 ### Environment Variables
 
@@ -73,26 +98,7 @@ PASSWORD=your_password
 TOTP_SECRET=your_totp_secret
 ```
 
-## 🔗 API Endpoints
-
-| Endpoint | Description | Parameters |
-|----------|-------------|------------|
-| `/search` | Search torrents | `query` (required): Search term<br>`page` (optional): Page number (default: 1) |
-| `/profile` | Get user profile | None |
-
-## 🔐 Authentication Flow
-
-The application follows this authentication sequence:
-1. First tries to use existing cookies if available
-2. If cookies are invalid, attempts login with credentials from:
-   - Command-line arguments
-   - Environment variables
-   - Saved configuration file
-3. Successfully authenticated session cookies are saved for future use
-
-## 🐳 Docker
-
-Build and run with Docker:
+## Docker
 
 ```bash
 # Build the image
@@ -101,20 +107,30 @@ docker build -t tbd-api .
 # Run the container
 docker run -p 5000:5000 tbd-api --username "user" --password "pass" --totp-secret "secret"
 
-# or
+# or with environment variables
 docker run --env-file .env -p 5000:5000 tbd-api
 ```
 
-## 🛠️ Development
-
-Clone the repository and install in development mode:
+## Development
 
 ```bash
+# Clone the repository
 git clone https://github.com/TanmoyTheBoT/torrentbd-api.git
 cd torrentbd-api
-pip install .
+
+# Install in development mode
+make install
+
+# Run
+make run
+
+# Run tests
+make check
+
+# Run linters
+make lint
 ```
 
-## 📝 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

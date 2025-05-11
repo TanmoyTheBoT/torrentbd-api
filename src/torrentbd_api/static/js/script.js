@@ -1,16 +1,16 @@
 // Fetch API version from the backend when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     let apiVersion = '1.0.0'; // Default version if not fetched
-    
+
     try {
         const response = await fetch('/api');
         const data = await response.json();
-        
+
         if (data && data.info && data.info.version) {
             // Update the API version display
             apiVersion = data.info.version;
             document.getElementById('api-version').textContent = apiVersion;
-            
+
             // Try to get real search data first
             try {
                 const defaultQuery = document.getElementById('custom-query').value || 'ubuntu';
@@ -26,22 +26,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Hide loading spinner even if there's an error
         hideResponseLoading();
     }
-    
+
     // Initialize dark mode from system preference or local storage
     initializeTheme();
-    
+
     // Add animation effects
     animateElements();
-    
+
     // Setup theme toggle
     setupThemeToggle();
-    
+
     // Setup refresh button
     setupRefreshButton();
-    
+
     // Setup custom query functionality
     setupCustomQuerySearch();
-    
+
     // Setup copy button
     setupCopyButton();
 });
@@ -50,13 +50,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 function setupCustomQuerySearch() {
     const queryInput = document.getElementById('custom-query');
     const runQueryButton = document.getElementById('run-query');
-    
+
     if (queryInput && runQueryButton) {
         // Run query when button is clicked
         runQueryButton.addEventListener('click', () => {
             executeCustomQuery(queryInput.value);
         });
-        
+
         // Also run query when Enter key is pressed in the input field
         queryInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
@@ -73,18 +73,18 @@ async function executeCustomQuery(query) {
         alert('Please enter a search query');
         return;
     }
-    
+
     const sanitizedQuery = query.trim();
-    
+
     // Show loading spinner
     const loadingElement = document.getElementById('response-loading');
     if (loadingElement) {
         loadingElement.style.display = 'flex';
     }
-    
+
     // Update the example code with the new query
     updateExampleCode(sanitizedQuery);
-    
+
     try {
         // Try to fetch data with the custom query
         await fetchRealSearchData(sanitizedQuery);
@@ -110,16 +110,16 @@ function setupRefreshButton() {
             // Get current query from input
             const queryInput = document.getElementById('custom-query');
             const currentQuery = queryInput ? queryInput.value.trim() : 'ubuntu';
-            
+
             // Show loading spinner
             const loadingElement = document.getElementById('response-loading');
             if (loadingElement) {
                 loadingElement.style.display = 'flex';
             }
-            
+
             // Add spinning animation to refresh icon
             refreshButton.classList.add('animate-spin');
-            
+
             try {
                 // Try to fetch fresh data with current query
                 await fetchRealSearchData(currentQuery);
@@ -140,7 +140,7 @@ async function fetchRealSearchData(query = 'ubuntu') {
         // Attempt to fetch real search data with the provided query
         const searchResponse = await fetch(`/search?query=${encodeURIComponent(query)}`);
         const searchData = await searchResponse.json();
-        
+
         if (searchData && searchData.result) {
             // Display exactly what the API returns without modifications
             const formattedJson = JSON.stringify(searchData, null, 2);
@@ -178,20 +178,20 @@ function copyToClipboard() {
         console.error('Code element not found');
         return;
     }
-    
+
     const textToCopy = codeElement.textContent;
-    
+
     // Log for debugging
     console.log('Copying text:', textToCopy);
-    
+
     navigator.clipboard.writeText(textToCopy)
         .then(() => {
             const copyBtn = document.querySelector('.copy-btn');
             const originalIcon = copyBtn.innerHTML;
-            
+
             // Change icon to indicate successful copy
             copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-            
+
             // Restore original icon after 2 seconds
             setTimeout(() => {
                 copyBtn.innerHTML = originalIcon;
@@ -210,7 +210,7 @@ function fallbackCopyTextToClipboard(text) {
         // Create temporary textarea
         const textArea = document.createElement("textarea");
         textArea.value = text;
-        
+
         // Make the textarea invisible
         textArea.style.position = 'fixed';
         textArea.style.top = 0;
@@ -222,11 +222,11 @@ function fallbackCopyTextToClipboard(text) {
         textArea.style.outline = 'none';
         textArea.style.boxShadow = 'none';
         textArea.style.background = 'transparent';
-        
+
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        
+
         try {
             const successful = document.execCommand('copy');
             const copyBtn = document.querySelector('.copy-btn');
@@ -239,7 +239,7 @@ function fallbackCopyTextToClipboard(text) {
         } catch (err) {
             console.error('Fallback: Error copying text', err);
         }
-        
+
         document.body.removeChild(textArea);
     } catch (err) {
         console.error('Could not copy text: ', err);
@@ -256,7 +256,7 @@ function animateElements() {
             }
         });
     }, { threshold: 0.1 });
-    
+
     // Observe all sections and endpoint cards
     document.querySelectorAll('section, .endpoint-card').forEach(el => {
         el.classList.add('animate-on-scroll');
@@ -280,7 +280,7 @@ function initializeTheme() {
     // Check for saved theme preference or use system preference
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+
     if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
         document.documentElement.classList.add('dark');
     } else {
@@ -302,4 +302,4 @@ function setupThemeToggle() {
             }
         });
     }
-} 
+}

@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir .
 RUN mkdir -p /root/.config/tbd-api
 
 EXPOSE 5000
-ENTRYPOINT ["tbd-api"] 
+ENTRYPOINT ["tbd-api"]
