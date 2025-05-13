@@ -5,7 +5,7 @@ Unofficial API for TorrentBD with search and profile access.
 <p align="center">
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.12%2B-blue.svg" alt="Python Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"></a>
-  <a href="https://badge.fury.io/py/tbd-api"><img src="https://badge.fury.io/py/tbd-api.svg" alt="PyPI version"></a>
+  <a href="https://badge.fury.io/py/tbd-api"><img src="https://badge.fury.io/py/tbd-api.svg?nocache=1" alt="PyPI version"></a>
   <a href="https://pepy.tech/projects/tbd-api"><img src="https://static.pepy.tech/badge/tbd-api" alt="PyPI Downloads"></a>
 </p>
 
