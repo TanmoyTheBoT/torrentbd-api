@@ -5,7 +5,9 @@ from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+from .active import get_online_users
 from .profile import get_user_profile
+from .schema import OnlineUsersResponse
 from .search import search_torrents
 from .version import __version__
 
@@ -48,6 +50,11 @@ def root() -> dict[str, Any]:
                 "method": "GET",
                 "description": "Get user profile information",
             },
+            "online": {
+                "path": "/online",
+                "method": "GET",
+                "description": "Get the list of online users",
+            },
         },
         "documentation": {"swagger": "/docs", "redoc": "/redoc"},
     }
@@ -67,3 +74,10 @@ def profile() -> dict[str, Any]:
     """Get user profile information."""
     result = get_user_profile()
     return {"result": result}
+
+
+@app.get("/online", response_model=OnlineUsersResponse)
+def list_online_users() -> OnlineUsersResponse:
+    """Get the list of online users."""
+    users = get_online_users()
+    return OnlineUsersResponse(count=len(users), users=users)

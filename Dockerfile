@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y \
 # Setup app
 WORKDIR /app
 COPY . /app
-RUN pip install --no-cache-dir .
+COPY --from=ghcr.io/astral-sh/uv:0.8.8 /uv /uvx /bin/
+RUN uv sync --locked
 RUN mkdir -p /root/.config/tbd-api
 
 EXPOSE 5000
-ENTRYPOINT ["tbd-api"]
+ENTRYPOINT ["uv", "run", "tbd-api"]

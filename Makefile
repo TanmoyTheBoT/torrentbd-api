@@ -7,7 +7,7 @@ SRC = src/torrentbd_api
 install:
 	-pip install uv || python -m pip install uv
 	-uv --version || curl -LsSf https://astral.sh/uv/install.sh | sh
-	uv venv --python 3.12
+	uv venv
 	uv pip install .[dev]
 	uv run pre-commit install
 
