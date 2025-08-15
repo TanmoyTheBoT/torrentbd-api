@@ -4,6 +4,7 @@ import os
 from typing import Any
 
 import uvicorn
+from dotenv import load_dotenv
 
 from torrentbd_api.login import (
     check_login_status,
@@ -11,6 +12,8 @@ from torrentbd_api.login import (
     login,
     set_credentials,
 )
+
+load_dotenv()  # Load environment variables from .env file
 
 
 def load_config() -> dict[str, Any]:
@@ -112,12 +115,12 @@ def main() -> None:
         save_config(config)
 
     # Set environment variables from config if not already set
-    if "username" in config and not os.environ.get("USERNAME"):
-        os.environ["USERNAME"] = config["username"]
-    if "password" in config and not os.environ.get("PASSWORD"):
-        os.environ["PASSWORD"] = config["password"]
-    if "totp_secret" in config and not os.environ.get("TOTP_SECRET"):
-        os.environ["TOTP_SECRET"] = config["totp_secret"]
+    if "username" in config and not os.environ.get("TORRENTBD_USERNAME"):
+        os.environ["TORRENTBD_USERNAME"] = config["username"]
+    if "password" in config and not os.environ.get("TORRENTBD_PASSWORD"):
+        os.environ["TORRENTBD_PASSWORD"] = config["password"]
+    if "totp_secret" in config and not os.environ.get("TORRENTBD_TOTP_SECRET"):
+        os.environ["TORRENTBD_TOTP_SECRET"] = config["totp_secret"]
 
     # Ensure login
     ensure_login(args.username, args.password, args.totp_secret, args.cookies)

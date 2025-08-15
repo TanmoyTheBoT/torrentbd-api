@@ -27,7 +27,7 @@ headers = {
     "accept": "application/json",
     "user-agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        " (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+        " (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
     ),
 }
 
@@ -37,13 +37,12 @@ def set_credentials(
     password: str | None = None,
     totp_secret: str | None = None,
 ) -> None:
-    """Set credentials as environment variables"""
     if username:
-        os.environ["USERNAME"] = username
+        os.environ["TORRENTBD_USERNAME"] = username
     if password:
-        os.environ["PASSWORD"] = password
+        os.environ["TORRENTBD_PASSWORD"] = password
     if totp_secret:
-        os.environ["TOTP_SECRET"] = totp_secret
+        os.environ["TORRENTBD_TOTP_SECRET"] = totp_secret
 
 
 def get_recaptcha_token() -> str:
@@ -103,9 +102,9 @@ def check_login_status() -> bool:
 
 def login() -> None:
     # Check for required credentials
-    username = os.environ.get("USERNAME")
-    password = os.environ.get("PASSWORD")
-    totp_secret = os.environ.get("TOTP_SECRET")
+    username = os.environ.get("TORRENTBD_USERNAME")
+    password = os.environ.get("TORRENTBD_PASSWORD")
+    totp_secret = os.environ.get("TORRENTBD_TOTP_SECRET")
 
     if not all([username, password, totp_secret]):
         error_msg = (
@@ -154,7 +153,7 @@ def login() -> None:
             print("❌ Login failed. Check credentials or CAPTCHA.")
             print(f"Response: {response.text}")
     except Exception as e:
-        print(f"❌ Login request failed: {e}")
+        raise RuntimeError(f"Login request failed: {e}")
 
 
 if __name__ == "__main__":

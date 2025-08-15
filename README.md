@@ -58,6 +58,7 @@ tbd-api --host "127.0.0.1" --port 8000
 |----------|--------|-------------|------------|
 | `/search` | GET | Search torrents | `query` (required): Search term<br>`page` (optional): Page number (default: 1) |
 | `/profile` | GET | Get user profile | None |
+| `/online` | GET | Get the list of online users | None |
 
 
 ## Configuration
@@ -93,9 +94,9 @@ You can use the [Get cookies.txt LOCALLY](https://chromewebstore.google.com/deta
 
 You can also use a `.env` file in the project folder:
 ```
-USERNAME=your_username
-PASSWORD=your_password
-TOTP_SECRET=your_totp_secret
+TORRENTBD_USERNAME=username@mail.com
+TORRENTBD_PASSWORD=secure_password
+TORRENTBD_TOTP_SECRET=base32secret3232
 ```
 
 ## Docker
